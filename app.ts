@@ -1,23 +1,24 @@
 import 'dotenv/config'
 import { connectDB } from './database/connectdb'
-connectDB()
+import config from 'config'
+
 import express from "express";
-import authRouter from './routes/auth.route'
+import log from './utils/logger';
+import router from './routes/index'
 
 
-
-
-const PORT = process.env.PORT || 5000
+const PORT = config.get("port")
 
 const app = express()
 app.use(express.json())
 
-app.use('/api/v1', authRouter)
+app.use(router)
 
-app.get("/", (req, res) => {
-    res.json({ ok: true })
-})
+
+
+
 
 app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`)
+    log.info(`App started at http://localhost:${PORT}`)
+    connectDB()
 })

@@ -1,10 +1,10 @@
 import Express from 'express'
 
-export interface AuthData {
+export interface UserAuth {
     email: string,
     password: string,
 }
 
-export interface TypedRequestBody<T> extends Express.Request {
+export interface RequestBody<T> extends Express.Request {
     body: T
 }

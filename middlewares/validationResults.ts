@@ -1,24 +1,17 @@
-import { validationResult } from "express-validator"
+import { Request, Response, NextFunction } from "express";
+import { AnyZodObject } from "zod"
 
-import Express from 'express'
-
-
-
-
-
-
-
-
-
-export const validationResultsCheck = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
-
-    const errors = validationResult(req)
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
+const validateResource = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
+    try {
+        schema.parse({
+            body: req.body,
+            query: req.query,
+            params: req.params
+        })
+        next()
+    } catch (error: any) {
+        return res.status(400).send(error.errors)
     }
-
-    next()
-
-
 }
+
+export default validateResource
